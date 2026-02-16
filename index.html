@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hoje tem? 🌚😏</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a1a;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #btn-sim {
+            background-color: #00ff88;
+            color: #1a1a1a;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        #btn-sim:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.7);
+        }
+
+        #btn-nao {
+            background-color: #ff4757;
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+            /* Importante: a transição aqui é para o efeito de deslizar suave */
+            transition: left 0.3s ease, top 0.3s ease; 
+        }
+
+        /* Tela de Sucesso */
+        #success-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+            z-index: 20;
+        }
+
+        #success-screen.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #success-screen h1 {
+            font-size: 4rem;
+            color: white;
+            margin: 0;
+        }
+
+        #success-screen p {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .confetti {
+            position: absolute;
+            top: -50px;
+            animation: fall linear forwards;
+            font-size: 2rem;
+            z-index: 100;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-content">
+        <h1>HOJE TEM? 🌚</h1>
+        <div class="buttons">
+            <button id="btn-sim">SIM</button>
+            <button id="btn-nao">NÃO</button>
+        </div>
+    </div>
+
+    <div id="success-screen">
+        <h1>RSRSRSRSRS 😈</h1>
+        <p>Não consegue negar que quer 🫦</p>
+    </div>
+
+    <script>
+        const btnNao = document.getElementById('btn-nao');
+        const btnSim = document.getElementById('btn-sim');
+        const successScreen = document.getElementById('success-screen');
+
+        // Função corrigida para garantir limites da tela
+        function moveButton() {
+            // Pega as dimensões atuais da janela
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            // Pega as dimensões do botão
+            const btnWidth = btnNao.offsetWidth;
+            const btnHeight = btnNao.offsetHeight;
+
+            // Define uma margem de segurança (padding da borda)
+            const margin = 20;
+
+            // Calcula o limite máximo onde o botão pode começar (X e Y)
+            // Subtrai o tamanho do botão para ele não "vazar" pela direita ou baixo
+            const maxX = windowWidth - btnWidth - margin;
+            const maxY = windowHeight - btnHeight - margin;
+
+            // Gera posições aleatórias respeitando os limites
+            // Math.max(margin, ...) garante que não vá muito para a esquerda ou topo
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            // Aplica a nova posição
+            // Usamos 'fixed' para garantir que a posição seja relativa à janela visível
+            btnNao.style.position = 'fixed';
+            btnNao.style.left = `${Math.max(margin, randomX)}px`;
+            btnNao.style.top = `${Math.max(margin, randomY)}px`;
+        }
+
+        // Eventos para desktop e mobile
+        btnNao.addEventListener('mouseover', moveButton);
+        btnNao.addEventListener('click', (e) => {
+            e.preventDefault(); // Impede clique acidental
+            moveButton();
+        });
+        btnNao.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        // Evento do botão SIM
+        btnSim.addEventListener('click', () => {
+            successScreen.classList.add('visible');
+            createConfetti();
+        });
+
+        function createConfetti() {
+            const emojis = ['⚽', '🏆', '🥳', '👟', '🥅', '🎉'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti); // Adiciona ao body para garantir visibilidade
+            }
+        }
+    </script>
+
+</body>
+</html>
